@@ -1,0 +1,9 @@
+@Kiikiiworld_Api_HostAddress = http://localhost:5199
+
+GET {{Kiikiiworld_Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{Kiikiiworld_Api_HostAddress}}/posts
+Accept: text/plain
