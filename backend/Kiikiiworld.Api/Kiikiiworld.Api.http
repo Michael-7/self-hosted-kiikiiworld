@@ -7,3 +7,15 @@ Accept: application/json
 
 GET {{Kiikiiworld_Api_HostAddress}}/posts
 Accept: text/plain
+
+###
+
+POST {{Kiikiiworld_Api_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "kind": "Quote",
+  "title": "On persistence",
+  "body": "Fall seven times, stand up eight."
+}
+
