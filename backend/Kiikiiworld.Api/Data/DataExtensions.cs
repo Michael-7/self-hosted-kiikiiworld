@@ -25,7 +25,8 @@ public static class DataExtensions
                         new PostType { Name = "Photo" },
                         new PostType { Name = "Video" },
                         new PostType { Name = "Quote" },
-                        new PostType { Name = "Story" }
+                        new PostType { Name = "Story" },
+                        new PostType { Name = "Audio" }
                     );
 
                     context.SaveChanges();

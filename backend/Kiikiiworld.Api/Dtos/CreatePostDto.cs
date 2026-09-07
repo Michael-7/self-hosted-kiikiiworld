@@ -5,8 +5,8 @@ namespace Kiikiiworld.Api.Dtos;
 
 // The kinds of post that can be created through this endpoint.
 // Visual media is intentionally omitted for now.
-[JsonConverter(typeof(JsonStringEnumConverter<CreatePostKind>))]
-public enum CreatePostKind
+[JsonConverter(typeof(JsonStringEnumConverter<CreatePostType>))]
+public enum CreatePostType
 {
     Quote,
     Story
@@ -15,8 +15,8 @@ public enum CreatePostKind
 public class CreatePostDto
 {
     [Required]
-    [EnumDataType(typeof(CreatePostKind))]
-    public CreatePostKind Kind { get; set; }
+    [EnumDataType(typeof(CreatePostType))]
+    public CreatePostType Type { get; set; }
 
     [Required]
     [MaxLength(200)]

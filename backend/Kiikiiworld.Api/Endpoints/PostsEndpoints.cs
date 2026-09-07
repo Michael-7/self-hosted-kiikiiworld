@@ -18,17 +18,18 @@ public static class PostsEndpoints
         {
             // The enum name (e.g. "Quote") matches the seeded PostType.Name.
             var postType = await dbContext.PostTypes
-                .FirstOrDefaultAsync(t => t.Name == dto.Kind.ToString());
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Name == dto.Type.ToString());
 
             if (postType is null)
             {
-                return Results.Problem($"Unknown post type '{dto.Kind}'.");
+                return Results.Problem($"Unknown post type '{dto.Type}'.");
             }
 
             Post post = new()
             {
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
                 PostTypeId = postType.Id,
                 Title = dto.Title,
                 Body = dto.Body,
@@ -37,11 +38,16 @@ public static class PostsEndpoints
             dbContext.Add(post);
             await dbContext.SaveChangesAsync();
 
-            PostDetailsDto returnPost = new(
-                post.Id
-            );
+            PostDetailsDto returnPost = new()
+            {
+                Id = post.Id,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                Hidden = post.Hidden,
+                PostTypeId = post.PostTypeId,
+            };
 
-            return Results.Created($"/posts/{post.Id}", post);
+            return Results.Created($"/posts/{post.Id}", returnPost);
         });
     }
 }

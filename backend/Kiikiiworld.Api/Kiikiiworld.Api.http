@@ -14,8 +14,18 @@ POST {{Kiikiiworld_Api_HostAddress}}/posts
 Content-Type: application/json
 
 {
-  "kind": "Quote",
+  "type": "Quote",
   "title": "On persistence",
   "body": "Fall seven times, stand up eight."
 }
 
+###
+
+POST {{Kiikiiworld_Api_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "type": "Quote",
+  "title": "gg",
+  "body": "Good Game"
+}

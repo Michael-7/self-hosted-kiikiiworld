@@ -1,7 +1,7 @@
 namespace Kiikiiworld.Api.Models;
 
 
-public class VisualMedia
+public class Media
 {
     public int Id { get; set; }
     public required MediaType Type { get; set; }

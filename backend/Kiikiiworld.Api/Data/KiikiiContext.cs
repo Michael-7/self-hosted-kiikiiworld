@@ -7,11 +7,11 @@ public class KiikiiContext(DbContextOptions<KiikiiContext> options) : DbContext(
 {
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<PostType> PostTypes => Set<PostType>();
-    public DbSet<VisualMedia> VisualMedia => Set<VisualMedia>();
+    public DbSet<Media> Media => Set<Media>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<VisualMedia>()
+        modelBuilder.Entity<Media>()
             .Property(m => m.Type)
             .HasConversion<string>();
     }

@@ -16,5 +16,5 @@ public class Post
     public string? Body { get; set; }        // story & quote
 
     // Visual Media connection (one post -> many media)
-    public List<VisualMedia> VisualMedia { get; set; } = [];
+    public List<Media> Media { get; set; } = [];
 }
