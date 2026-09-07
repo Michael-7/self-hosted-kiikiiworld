@@ -12,8 +12,47 @@ public static class PostsEndpoints
         var group = app.MapGroup("/posts");
 
         // GET posts
-        group.MapGet("/", () => "hello world!");
+        group.MapGet("/", async (KiikiiContext dbContext) => {
+            var posts = await dbContext.Posts
+            .AsNoTracking()
+            .Where(p => !p.Hidden)
+            .OrderByDescending(p => p.CreatedAt)
+            .Select(p => new GetPostsDto
+            {
+                Id = p.Id,
+                CreatedAt = p.CreatedAt,
+                UpdatedAt = p.UpdatedAt,
+                Type = p.Type!.Name,
+                Title = p.Title,
+                Body = p.Body,
+            })
+            .ToListAsync();
 
+            return Results.Ok(posts);
+        });
+
+        // GET by ID
+        group.MapGet("/{id}", async (int id, KiikiiContext dbContext) =>
+        {
+            var post = await dbContext.Posts
+                .AsNoTracking()
+                .Where(p => p.Id == id)
+                .Select(p => new GetPostsDto
+                {
+                    Id = p.Id,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    Type = p.Type!.Name,
+                    Title = p.Title,
+                    Body = p.Body,
+                })
+                .FirstOrDefaultAsync();
+
+            return post is null ? Results.NotFound() : Results.Ok(post);
+        })
+        .WithName("GetPost");
+
+        // CREATE posts
         group.MapPost("/", async (CreatePostDto dto, KiikiiContext dbContext) =>
         {
             // The enum name (e.g. "Quote") matches the seeded PostType.Name.
@@ -48,6 +87,17 @@ public static class PostsEndpoints
             };
 
             return Results.Created($"/posts/{post.Id}", returnPost);
+        });
+
+        // DELETE post
+        group.MapDelete("/{id}", async (int id, KiikiiContext dbContext) =>
+        {
+            // Related Media rows go with it via the cascade on the FK.
+            var deleted = await dbContext.Posts
+                .Where(p => p.Id == id)
+                .ExecuteDeleteAsync();
+
+            return deleted == 0 ? Results.NotFound() : Results.NoContent();
         });
     }
 }

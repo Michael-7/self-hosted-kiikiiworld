@@ -10,6 +10,11 @@ Accept: text/plain
 
 ###
 
+GET {{Kiikiiworld_Api_HostAddress}}/posts/2
+Accept: text/plain
+
+###
+
 POST {{Kiikiiworld_Api_HostAddress}}/posts
 Content-Type: application/json
 
@@ -29,3 +34,8 @@ Content-Type: application/json
   "title": "gg",
   "body": "Good Game"
 }
+
+###
+
+DELETE {{Kiikiiworld_Api_HostAddress}}/posts/1
+Content-Type: application/json
