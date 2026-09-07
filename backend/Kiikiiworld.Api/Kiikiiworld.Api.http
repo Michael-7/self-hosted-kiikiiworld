@@ -31,8 +31,8 @@ Content-Type: application/json
 
 {
   "type": "Quote",
-  "title": "gg",
-  "body": "Good Game"
+  "title": "hello world",
+  "body": "This is a test quote"
 }
 
 ###

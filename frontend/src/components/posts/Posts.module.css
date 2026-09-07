@@ -1,0 +1,12 @@
+.postsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.post {
+    color: black;
+    background-color: rosybrown;
+    min-height: 100px;
+    min-width: 100px;
+}
