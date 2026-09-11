@@ -1,3 +1,5 @@
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import styles from './Post.module.css';
 import type { Post as PostModel } from '../../types/post';
 
@@ -14,7 +16,7 @@ export function Post({ post }: { post: PostModel }) {
     <div className={styles.post}>
       {post.body && (
         <div className={`${styles.content} ${styles.body}`}>
-          <p>{post.body}</p>
+          <Markdown remarkPlugins={[remarkGfm]}>{post.body}</Markdown>
         </div>
       )}
       <div className={styles.details}>

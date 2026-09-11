@@ -108,3 +108,8 @@
 .body pre {
   background-color: var(--color-grey);
 }
+
+.body :global(.contains-task-list),
+.body :global(.contains-task-list) li {
+  list-style: none;
+}
