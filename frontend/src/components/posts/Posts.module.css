@@ -1,12 +1,24 @@
-.postsWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.postContainer {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-width: var(--content-width);
+  margin: var(--spacing-xl) auto;
+  margin-top: calc(var(--nav-height) + var(--spacing-xl));
+  z-index: 1;
+  background-color: var(--color-light);
 }
 
-.post {
-    color: black;
-    background-color: rosybrown;
-    min-height: 100px;
-    min-width: 100px;
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxl);
+  width: 100%;
+}
+
+@media screen and (max-width: 574px) {
+  .postList {
+    gap: var(--spacing-xl);
+  }
 }

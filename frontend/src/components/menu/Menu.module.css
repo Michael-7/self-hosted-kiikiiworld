@@ -1,0 +1,35 @@
+.menu {
+  position: fixed;
+  left: 0;
+  top: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1;
+}
+
+.link {
+  /* Reset native button styles so it looks like the original links */
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+
+  font-family: var(--accent-font);
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: var(--color-text);
+  padding: var(--spacing-xsm) var(--spacing-md) var(--spacing-xsm) var(--spacing-sm);
+}
+
+.selected {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+
+@media screen and (max-width: 940px) {
+  .menu {
+    display: none;
+  }
+}

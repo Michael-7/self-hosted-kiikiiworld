@@ -6,3 +6,10 @@ node_modules/
 [Bb]in/
 [Oo]bj/
 *.user
+
+
+node_modules
+*.log
+
+# Output directory
+dist

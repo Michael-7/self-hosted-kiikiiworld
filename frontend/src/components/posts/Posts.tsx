@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import styles from './Posts.module.css';
-
-interface Post {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  type: string;
-  title: string | null;
-  body: string | null;
-}
+import type { Post as PostModel } from '../../types/post';
+import { Post } from '../post/Post';
+import { Menu } from '../menu/Menu';
 
 const API_URL = 'http://localhost:5199';
 
 export function Posts() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostModel[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`${API_URL}/posts`)
@@ -26,19 +21,23 @@ export function Posts() {
       .catch((err) => setError(err.message));
   }, []);
 
-  if (error) {
-    return <div className={styles.postsWrapper}>Failed to load posts: {error}</div>;
-  }
+  const types = [...new Set(posts.map((post) => post.type))];
+  const shownPosts = filter ? posts.filter((post) => post.type === filter) : posts;
 
   return (
-    <div className={styles.postsWrapper}>
-      {posts.map((post) => (
-        <div key={post.id} className={styles.post}>
-          <p>{post.type}</p>
-          {post.title && <p>{post.title}</p>}
-          {post.body && <p>{post.body}</p>}
-        </div>
-      ))}
-    </div>
+    <>
+      <div className={styles.postContainer}>
+        {error ? (
+          <p>Failed to load posts: {error}</p>
+        ) : (
+          <div className={styles.postList}>
+            {shownPosts.map((post) => (
+              <Post key={post.id} post={post} />
+            ))}
+          </div>
+        )}
+      </div>
+      <Menu types={types} selected={filter} onSelect={setFilter} />
+    </>
   );
 }

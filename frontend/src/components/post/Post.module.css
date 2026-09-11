@@ -1,0 +1,110 @@
+.post {
+  width: 100%;
+}
+
+.content {
+  max-width: 100%;
+}
+
+.image {
+  height: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.title {
+  font-family: var(--accent-font);
+  font-size: var(--font-size-sm);
+}
+
+.date {
+  font-family: var(--accent-font);
+  font-size: var(--font-size-sm);
+  text-align: right;
+}
+
+.video {
+  width: 100%;
+  height: 360px;
+}
+
+@media screen and (max-width: 670px) {
+  .video {
+    height: 52vw;
+    max-height: 360px;
+  }
+}
+
+.quote {
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Rich text body (ported from mdx.module.scss) */
+.body p, .body h1, .body h2, .body h3, .body h4, .body h5, .body h6,
+.body li, .body ul, .body ol, .body table {
+  font-family: var(--primary-font);
+  font-weight: 500;
+}
+
+.body h1, .body h2, .body h3, .body h4, .body h5, .body h6 {
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.body h6 {
+  font-size: 3em;
+}
+
+.body a {
+  font-family: var(--primary-font);
+  font-weight: 500;
+  color: var(--color-text-on-primary);
+  background-color: var(--color-primary);
+  padding: 0 var(--spacing-xsm);
+}
+
+.body em {
+  font-style: italic;
+}
+
+.body strong {
+  font-weight: 600;
+}
+
+.body p {
+  margin: var(--spacing-sm) 0;
+}
+
+.body li {
+  margin: var(--spacing-sm) var(--spacing-md);
+}
+
+.body hr {
+  outline: none;
+  border: none;
+  height: 2px;
+  background-color: var(--color-grey-light);
+  margin: var(--spacing-md) 0;
+}
+
+.body img {
+  max-width: 100%;
+}
+
+.body code {
+  font-family: var(--accent-font);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+}
+
+.body pre {
+  background-color: var(--color-grey);
+}
