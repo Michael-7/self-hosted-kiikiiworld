@@ -87,7 +87,8 @@ public static class PostsEndpoints
             };
 
             return Results.Created($"/posts/{post.Id}", returnPost);
-        });
+        })
+        .RequireAuthorization();
 
         // DELETE post
         group.MapDelete("/{id}", async (int id, KiikiiContext dbContext) =>
@@ -98,6 +99,7 @@ public static class PostsEndpoints
                 .ExecuteDeleteAsync();
 
             return deleted == 0 ? Results.NotFound() : Results.NoContent();
-        });
+        })
+        .RequireAuthorization();
     }
 }
