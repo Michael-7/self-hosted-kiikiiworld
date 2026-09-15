@@ -19,8 +19,21 @@ public static class AuthEndpoints
             var auth = authOptions.Value;
 
             var validUsername = !string.IsNullOrEmpty(auth.AdminUsername) && dto.Username == auth.AdminUsername;
-            var validPassword = !string.IsNullOrEmpty(auth.AdminPasswordHash)
-                && BCrypt.Net.BCrypt.Verify(dto.Password, auth.AdminPasswordHash);
+
+            var validPassword = false;
+            if (!string.IsNullOrEmpty(auth.AdminPasswordHash))
+            {
+                try
+                {
+                    validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, auth.AdminPasswordHash);
+                }
+                catch (BCrypt.Net.SaltParseException)
+                {
+                    // Auth:AdminPasswordHash isn't a valid bcrypt hash (e.g. a misconfigured secret).
+                    // Fail the login instead of crashing the request.
+                    validPassword = false;
+                }
+            }
 
             if (!validUsername || !validPassword)
             {

@@ -1,8 +1,10 @@
+import { Route, Routes } from 'react-router-dom';
 import styles from './App.module.css';
 import { Nav } from './components/nav/Nav';
 import { Posts } from './components/posts/Posts';
+import { Login } from './components/login/Login';
 
-export function App() {
+function Home() {
   return (
     <div className={styles.app}>
       <Nav />
@@ -10,5 +12,14 @@ export function App() {
         <Posts />
       </main>
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
   );
 }

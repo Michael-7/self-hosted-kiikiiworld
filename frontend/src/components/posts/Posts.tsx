@@ -3,8 +3,7 @@ import styles from './Posts.module.css';
 import type { Post as PostModel } from '../../types/post';
 import { Post } from '../post/Post';
 import { Menu } from '../menu/Menu';
-
-const API_URL = 'http://localhost:5199';
+import { API_URL } from '../../lib/api';
 
 export function Posts() {
   const [posts, setPosts] = useState<PostModel[]>([]);
