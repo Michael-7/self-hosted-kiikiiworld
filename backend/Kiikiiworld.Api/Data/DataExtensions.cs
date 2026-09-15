@@ -12,9 +12,9 @@ public static class DataExtensions
         dbContext.Database.Migrate();
     }
 
-    public static void AddDb(this WebApplicationBuilder builder)
+    public static void AddDb(this WebApplicationBuilder builder, string dataDir)
     {
-        var connString = builder.Configuration.GetConnectionString("KiikiiworldDb");
+        var connString = $"Data Source={Path.Combine(dataDir, "Kiikiiworld.db")}";
         builder.Services.AddSqlite<KiikiiContext>(
             connString,
             optionsAction: options => options.UseSeeding((context, _) =>

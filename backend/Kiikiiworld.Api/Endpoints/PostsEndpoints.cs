@@ -1,6 +1,7 @@
 using Kiikiiworld.Api.Data;
 using Kiikiiworld.Api.Dtos;
 using Kiikiiworld.Api.Models;
+using Kiikiiworld.Api.Storage;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kiikiiworld.Api.Endpoints;
@@ -25,6 +26,7 @@ public static class PostsEndpoints
                 Type = p.Type!.Name,
                 Title = p.Title,
                 Body = p.Body,
+                Media = p.Media.Select(m => new MediaDto { Id = m.Id, Type = m.Type, Url = m.Url, OriginalUrl = m.OriginalUrl }).ToList(),
             })
             .ToListAsync();
 
@@ -45,6 +47,7 @@ public static class PostsEndpoints
                     Type = p.Type!.Name,
                     Title = p.Title,
                     Body = p.Body,
+                    Media = p.Media.Select(m => new MediaDto { Id = m.Id, Type = m.Type, Url = m.Url, OriginalUrl = m.OriginalUrl }).ToList(),
                 })
                 .FirstOrDefaultAsync();
 
@@ -91,14 +94,27 @@ public static class PostsEndpoints
         .RequireAuthorization();
 
         // DELETE post
-        group.MapDelete("/{id}", async (int id, KiikiiContext dbContext) =>
+        group.MapDelete("/{id}", async (int id, KiikiiContext dbContext, MediaStorage storage) =>
         {
+            var mediaUrls = await dbContext.Media
+                .Where(m => m.PostId == id)
+                .Select(m => new { m.Url, m.OriginalUrl })
+                .ToListAsync();
+
             // Related Media rows go with it via the cascade on the FK.
             var deleted = await dbContext.Posts
                 .Where(p => p.Id == id)
                 .ExecuteDeleteAsync();
 
-            return deleted == 0 ? Results.NotFound() : Results.NoContent();
+            if (deleted == 0) return Results.NotFound();
+
+            foreach (var media in mediaUrls)
+            {
+                storage.TryDeleteByUrl(media.Url);
+                storage.TryDeleteByUrl(media.OriginalUrl);
+            }
+
+            return Results.NoContent();
         })
         .RequireAuthorization();
     }

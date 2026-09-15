@@ -1,0 +1,13 @@
+services:
+  api:
+    build: ./backend/Kiikiiworld.Api
+    ports:
+      - "5199:8080" # LAN-reachable, not 127.0.0.1-only — auth is the security boundary now
+    volumes:
+      - ./data:/data # DB + media, survives rebuilds
+    environment:
+      - DataDir=/data
+      - Auth__AdminUsername=${ADMIN_USERNAME}
+      - Auth__AdminPasswordHash=${ADMIN_PASSWORD_HASH}
+      - Cors__AllowedOrigins__0=${FRONTEND_ORIGIN}
+    restart: unless-stopped

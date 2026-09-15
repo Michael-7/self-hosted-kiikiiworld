@@ -4,12 +4,12 @@ using System.Text.Json.Serialization;
 namespace Kiikiiworld.Api.Dtos;
 
 // The kinds of post that can be created through this endpoint.
-// Visual media is intentionally omitted for now.
 [JsonConverter(typeof(JsonStringEnumConverter<CreatePostType>))]
 public enum CreatePostType
 {
     Quote,
-    Story
+    Story,
+    Photo
 }
 
 public class CreatePostDto
@@ -22,6 +22,6 @@ public class CreatePostDto
     [MaxLength(200)]
     public required string Title { get; set; }
 
-    [Required]
-    public required string Body { get; set; }
+    // Optional — Photo posts are typically image-first with just a caption in Title.
+    public string? Body { get; set; }
 }

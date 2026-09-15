@@ -7,6 +7,7 @@ public class Media
     public required MediaType Type { get; set; }
     public required string Title { get; set; }
     public required string Url { get; set; }
+    public string? OriginalUrl { get; set; }
     public string? ThumbnailUrl { get; set; }
 
     // Owning post (many media -> one post)
