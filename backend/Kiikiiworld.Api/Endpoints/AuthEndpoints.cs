@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using Kiikiiworld.Api.Dtos;
 using Kiikiiworld.Api.Options;
 using Microsoft.AspNetCore.Authentication;
@@ -18,22 +20,8 @@ public static class AuthEndpoints
         {
             var auth = authOptions.Value;
 
-            var validUsername = !string.IsNullOrEmpty(auth.AdminUsername) && dto.Username == auth.AdminUsername;
-
-            var validPassword = false;
-            if (!string.IsNullOrEmpty(auth.AdminPasswordHash))
-            {
-                try
-                {
-                    validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, auth.AdminPasswordHash);
-                }
-                catch (BCrypt.Net.SaltParseException)
-                {
-                    // Auth:AdminPasswordHash isn't a valid bcrypt hash (e.g. a misconfigured secret).
-                    // Fail the login instead of crashing the request.
-                    validPassword = false;
-                }
-            }
+            var validUsername = !string.IsNullOrEmpty(auth.AdminUsername) && FixedTimeEquals(dto.Username, auth.AdminUsername);
+            var validPassword = !string.IsNullOrEmpty(auth.AdminPassword) && FixedTimeEquals(dto.Password, auth.AdminPassword);
 
             if (!validUsername || !validPassword)
             {
@@ -67,5 +55,18 @@ public static class AuthEndpoints
             return Results.Ok(new { Username = user.Identity!.Name });
         })
         .RequireAuthorization();
+    }
+
+    private static bool FixedTimeEquals(string a, string b)
+    {
+        var aBytes = Encoding.UTF8.GetBytes(a);
+        var bBytes = Encoding.UTF8.GetBytes(b);
+
+        // Padding keeps the comparison length-independent so responses don't leak length via timing.
+        var length = Math.Max(aBytes.Length, bBytes.Length);
+        Array.Resize(ref aBytes, length);
+        Array.Resize(ref bBytes, length);
+
+        return CryptographicOperations.FixedTimeEquals(aBytes, bBytes) && a.Length == b.Length;
     }
 }

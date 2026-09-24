@@ -1,6 +1,6 @@
 # Backend KiiKiiWorld
 
-run `dotnet watch run` inside Kiikiiworld.Api
+run `dotnet watch run --project Kiikiiworld.Api` inside Kiikiiworld.Api
 
 TODO:
 
@@ -14,27 +14,24 @@ TODO:
 ## Auth setup
 
 `POST /posts` and `DELETE /posts/{id}` require an admin login (`POST /auth/login`). There's a single
-admin account, configured via `Auth:AdminUsername` / `Auth:AdminPasswordHash` — not stored in the
-database, and never committed to `appsettings*.json`.
+admin account, configured via `Auth:AdminUsername` / `Auth:AdminPassword` (plain text) — not stored
+in the database.
 
-Generate a bcrypt hash for your password with any bcrypt CLI/REPL, e.g.:
+**Local dev** — `appsettings.Development.json` already ships with `admin` / `admin`, so
+`dotnet watch run` works with no setup. Change it there if you want something else locally; it's a
+throwaway dev default, fine to keep committed.
 
-```bash
-python3 -c "import bcrypt; print(bcrypt.hashpw(b'your-password', bcrypt.gensalt()).decode())"
-```
-
-**Local dev** — store it in User Secrets (already initialized for this project):
+**Hosting** — don't put real credentials in `appsettings.json`. Use User Secrets or environment
+variables instead:
 
 ```bash
 dotnet user-secrets set "Auth:AdminUsername" "your-username"
-dotnet user-secrets set "Auth:AdminPasswordHash" "<bcrypt hash>"
+dotnet user-secrets set "Auth:AdminPassword" "your-password"
 ```
-
-**Hosting** — set environment variables instead:
 
 ```bash
 Auth__AdminUsername=your-username
-Auth__AdminPasswordHash=<bcrypt hash>
+Auth__AdminPassword=your-password
 ```
 
 Login sets an HttpOnly cookie (`kiikiiworld_auth`, 7-day sliding expiration). `GET /posts` and
