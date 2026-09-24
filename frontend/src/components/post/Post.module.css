@@ -6,10 +6,55 @@
   max-width: 100%;
 }
 
+.gallery {
+  position: relative;
+}
+
 .image {
   height: auto;
   width: 100%;
   max-width: 100%;
+  display: block;
+}
+
+.caret {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15%;
+  display: flex;
+  align-items: center;
+  font-family: var(--accent-font);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--color-absolute-white);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.gallery:hover .caret {
+  opacity: 1;
+}
+
+.caret:focus-visible {
+  opacity: 1;
+}
+
+.caretLeft {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: var(--spacing-sm);
+  background: linear-gradient(to right, rgb(0 0 0 / 45%), transparent);
+}
+
+.caretRight {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: var(--spacing-sm);
+  background: linear-gradient(to left, rgb(0 0 0 / 45%), transparent);
 }
 
 .details {

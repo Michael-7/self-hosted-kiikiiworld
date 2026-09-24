@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import styles from './Post.module.css';
@@ -18,11 +19,44 @@ function resolveMediaUrl(url: string): string {
 }
 
 export function Post({ post }: { post: PostModel }) {
+  const [imageIndex, setImageIndex] = useState(0);
+  const media = post.media;
+  const hasMultipleImages = media.length > 1;
+
+  const showPrevImage = () => setImageIndex((index) => (index - 1 + media.length) % media.length);
+  const showNextImage = () => setImageIndex((index) => (index + 1) % media.length);
+
   return (
     <div className={styles.post}>
-      {post.media.map((media) => (
-        <img key={media.id} className={styles.image} src={resolveMediaUrl(media.url)} alt={post.title ?? ''} />
-      ))}
+      {media.length > 0 && (
+        <div className={styles.gallery}>
+          <img
+            className={styles.image}
+            src={resolveMediaUrl(media[imageIndex].url)}
+            alt={post.title ?? ''}
+          />
+          {hasMultipleImages && (
+            <>
+              <button
+                type="button"
+                className={`${styles.caret} ${styles.caretLeft}`}
+                onClick={showPrevImage}
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className={`${styles.caret} ${styles.caretRight}`}
+                onClick={showNextImage}
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </>
+          )}
+        </div>
+      )}
       {post.body && (
         <div className={`${styles.content} ${styles.body}`}>
           <Markdown remarkPlugins={[remarkGfm]}>{post.body}</Markdown>
@@ -30,7 +64,14 @@ export function Post({ post }: { post: PostModel }) {
       )}
       <div className={styles.details}>
         <span className={styles.title}>{post.title}</span>
-        <span className={styles.date}>{formatDate(post.createdAt)}</span>
+        <span className={styles.date}>
+          {hasMultipleImages && (
+            <span className={styles.imageCount}>
+              [{imageIndex + 1}/{media.length}]{' '}
+            </span>
+          )}
+          {formatDate(post.createdAt)}
+        </span>
       </div>
     </div>
   );

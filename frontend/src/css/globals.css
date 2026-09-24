@@ -6,6 +6,7 @@
   --color-primary: #7fffd4;
   --color-text: var(--color-dark);
   --color-text-on-primary: var(--color-dark);
+  --color-absolute-white: #fff;
 
   --spacing-xsm: .25rem; /* 4px spacing-1 */
   --spacing-sm: .5rem; /* 8px spacing-2 */
