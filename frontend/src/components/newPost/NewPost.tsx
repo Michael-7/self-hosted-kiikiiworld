@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import styles from './NewPost.module.css';
 import { useAuth } from '../../hooks/useAuth';
@@ -7,12 +7,14 @@ import { API_URL } from '../../lib/api';
 
 type NewPostType = 'Quote' | 'Story' | 'Photo';
 
+const MAX_IMAGES = 10;
+
 export function NewPost() {
   const { status } = useAuth();
   const [type, setType] = useState<NewPostType>('Quote');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [imageInputKey, setImageInputKey] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,9 +49,9 @@ export function NewPost() {
 
       const post = await res.json();
 
-      if (image) {
+      for (const file of images) {
         const formData = new FormData();
-        formData.append('file', image);
+        formData.append('file', file);
 
         const mediaRes = await fetch(`${API_URL}/posts/${post.id}/media`, {
           method: 'POST',
@@ -66,7 +68,7 @@ export function NewPost() {
 
       setTitle('');
       setBody('');
-      setImage(null);
+      setImages([]);
       setImageInputKey((key) => key + 1);
       setSuccess(true);
     } catch {
@@ -74,6 +76,16 @@ export function NewPost() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleImagesChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    setError(files.length > MAX_IMAGES ? `You can attach up to ${MAX_IMAGES} images.` : null);
+    setImages(files.slice(0, MAX_IMAGES));
+  };
+
+  const removeImage = (index: number) => {
+    setImages((current) => current.filter((_, i) => i !== index));
   };
 
   return (
@@ -96,7 +108,7 @@ export function NewPost() {
               if (newType === 'Photo') {
                 setBody('');
               } else {
-                setImage(null);
+                setImages([]);
                 setImageInputKey((key) => key + 1);
               }
             }}
@@ -121,14 +133,22 @@ export function NewPost() {
 
         {type === 'Photo' && (
           <label className={styles.field}>
-            <span>Image</span>
-            <input
-              key={imageInputKey}
-              type="file"
-              accept="image/*"
-              onChange={(event) => setImage(event.target.files?.[0] ?? null)}
-            />
+            <span>Images (up to {MAX_IMAGES})</span>
+            <input key={imageInputKey} type="file" accept="image/*" multiple onChange={handleImagesChange} />
           </label>
+        )}
+
+        {type === 'Photo' && images.length > 0 && (
+          <ul className={styles.imageList}>
+            {images.map((file, index) => (
+              <li key={`${file.name}-${index}`} className={styles.imageItem}>
+                <span className={styles.imageName}>{file.name}</span>
+                <button type="button" className={styles.imageRemove} onClick={() => removeImage(index)}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
         )}
 
         {error && <p className={styles.error}>{error}</p>}

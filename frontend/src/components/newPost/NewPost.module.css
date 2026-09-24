@@ -71,6 +71,48 @@
   outline-offset: -1px;
 }
 
+.imageList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xsm);
+  margin: 0;
+  padding: 0;
+}
+
+.imageItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  font-family: var(--accent-font);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xsm) var(--spacing-sm);
+  background-color: var(--color-grey-light);
+}
+
+.imageName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imageRemove {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  opacity: 0.7;
+  font-family: var(--accent-font);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+.imageRemove:hover {
+  opacity: 1;
+}
+
 .error {
   font-family: var(--accent-font);
   font-size: var(--font-size-sm);
